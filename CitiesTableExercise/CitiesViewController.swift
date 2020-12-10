@@ -104,11 +104,15 @@ class CitiesViewController: UITableViewController {
     
     // Add a city to the table
     private func addNewCityToTable(newCity: String) {
-        if !newCity.isEmpty || spainCityList.contains(newCity) {
+        print("COMPROBAR CIUDAD EXISTE: \(spainCityList.contains(newCity))")
+        if !newCity.isEmpty && !spainCityList.contains(newCity) {
             let newIndexPath = IndexPath(row: 0, section: 0)
             spainCityList.insert(newCity, at: 0)
             saveCityList(cityList: spainCityList)
             self.tableView.insertRows(at: [newIndexPath], with: .fade)
+            presentAlertMsg(title: "Ciudad Añadida", message: "Se ha añadido '\(newCity)' a la lista de ciudades")
+        } else {
+            presentAlertMsg(title: "No se ha podido añadir la ciudad", message: "Esto puede ocurrir debido a que el nombre está vacío o la ciudad a ingresar ya existe")
         }
     }
     
@@ -118,4 +122,10 @@ class CitiesViewController: UITableViewController {
         UserDefaults.standard.set(cityList, forKey: CITY_LIST_KEY)
     }
 
+    private func presentAlertMsg(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ok", style: .default)
+        alert.addAction(action)
+        present(alert, animated: true)
+    }
 }
